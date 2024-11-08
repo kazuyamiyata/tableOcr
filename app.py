@@ -26,7 +26,13 @@ language_code_map = {
 
 # 画像の最大幅と高さを設定
 max_width, max_height = 800, 800  # 必要に応じて変更
+def_num_columns=2
+def_num_offset=0
 
+if 'num_columns' not in st.session_state.keys():
+    st.session_state['num_columns'] = def_num_columns
+if 'num_offset' not in st.session_state.keys():
+    st.session_state['num_offset'] = def_num_offset
 
 # ページ幅の設定
 st.set_page_config(layout="wide")
@@ -38,10 +44,6 @@ st.title("TABLE OCR")
 # 画像アップロード
 uploaded_image = st.sidebar.file_uploader("画像のアップロード", type=['png', 'jpg', 'jpeg'])
 
-# 行や列の数が決まっている場合はそれに合わせて調整してください。
-# ここでは簡易的に列数を3として処理
-num_columns = st.sidebar.number_input("表の列数を入力", min_value=1, value=2)
-
 # 言語選択マルチセレクト
 selected_languages = st.sidebar.multiselect("言語を選択", language_options,"日本語")
 # 選択された言語のコードを格納
@@ -52,6 +54,11 @@ if uploaded_image:
     # 画像の読み込み
     image = Image.open(uploaded_image)
     
+    # 行や列の数が決まっている場合はそれに合わせて調整してください。
+    # ここでは簡易的に列数を3として処理
+    st.session_state['num_columns'] = st.sidebar.number_input("表の列数を入力", min_value=1, value=def_num_columns)
+    st.session_state['num_offset'] = st.sidebar.number_input("オフセット値を入力", min_value=0, value=def_num_offset)
+
     #OCR実行ボタンの配置
     button=st.sidebar.button("OCR実行")
     
@@ -65,7 +72,7 @@ if uploaded_image:
     # 画像が最大幅または高さを超える場合はリサイズ
     if image_width > max_width or image_height > max_height:
         # アスペクト比を保持しつつリサイズ
-        cropped_image.thumbnail((max_width, max_height), Image.ANTIALIAS)
+        cropped_image.thumbnail((max_width, max_height), Image.BICUBIC)
 
     with st.sidebar.expander("検討中の機能"):
         edge_threshold = st.slider("エッジ検出のための閾値",-500,500,100,5)
@@ -119,17 +126,20 @@ if uploaded_image:
         if button:
             # EasyOCR Readerのインスタンスを作成
             # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
-            reader = easyocr.Reader(selected_codes,gpu=False,model_storage_directory=".EasyOCR/model/",download_enabled=False)
+            reader = easyocr.Reader(selected_codes,model_storage_directory=".EasyOCR/model/")
             # OCRを実行し、テキスト情報を抽出
             result = reader.readtext(np.array(cropped_image), detail=1)
-
+            
             # OCRの結果からセル内容をリストに格納
             data = []
+            for i in range(st.session_state['num_offset']):
+                data.append("---")
+
             for (bbox, text, prob) in result:
                 data.append(text)
-
+                       
             # OCR結果を表形式に整理
-            table_data = [data[i:i + num_columns] for i in range(0, len(data), num_columns)]
+            table_data = [data[i:i + st.session_state['num_columns']] for i in range(0, len(data), st.session_state['num_columns'])]
             df = pd.DataFrame(table_data)
 
             # 表を表示
