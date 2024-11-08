@@ -1,6 +1,8 @@
 import streamlit as st
 from streamlit_cropper import st_cropper
 from PIL import Image
+# import os
+# os.environ['EASYOCR_MODULE_PATH'] = '.EasyOCR/model'
 import easyocr
 import pandas as pd
 import numpy as np
