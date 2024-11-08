@@ -111,24 +111,24 @@ if uploaded_image:
             # OCRを実行し、テキスト情報を抽出
             result = reader.readtext(np.array(cropped_image), detail=1)
 
-            # # OCRの結果からセル内容をリストに格納
-            # data = []
-            # for (bbox, text, prob) in result:
-            #     data.append(text)
+            # OCRの結果からセル内容をリストに格納
+            data = []
+            for (bbox, text, prob) in result:
+                data.append(text)
 
-            # # OCR結果を表形式に整理
-            # table_data = [data[i:i + num_columns] for i in range(0, len(data), num_columns)]
-            # df = pd.DataFrame(table_data)
+            # OCR結果を表形式に整理
+            table_data = [data[i:i + num_columns] for i in range(0, len(data), num_columns)]
+            df = pd.DataFrame(table_data)
 
-            # # 表を表示
-            # st.write("OCR結果")
-            # st.dataframe(df)
+            # 表を表示
+            st.write("OCR結果")
+            st.dataframe(df)
 
-            # # CSVとしてダウンロード
-            # csv = df.to_csv(index=False).encode('utf-8')
-            # st.download_button(
-            #     label="CSVとしてダウンロード",
-            #     data=csv,
-            #     file_name='table_data.csv',
-            #     mime='text/csv',
-            # )
+            # CSVとしてダウンロード
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="CSVとしてダウンロード",
+                data=csv,
+                file_name='table_data.csv',
+                mime='text/csv',
+            )
