@@ -96,18 +96,18 @@ if uploaded_image:
     # # 左右に分けるレイアウト作成
     # left_col, right_col = st.columns(2,vertical_alignment="center")
 
-    # # 左側：トリミングエリア
-    # with left_col:
-    #     # トリミングされた画像を表示
-    #     st.image(cropped_image, caption="OCR実行エリア")
+    # 左側：トリミングエリア
+    with left_col:
+        # トリミングされた画像を表示
+        st.image(cropped_image, caption="OCR実行エリア")
 
 
-    # with right_col:
+    with right_col:
         # OCR実行
-        # if button:
+        if button:
             # EasyOCR Readerのインスタンスを作成
             # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
-            # reader = easyocr.Reader(selected_codes,gpu=False,model_storage_directory=".EasyOCR/model/",download_enabled=False)
+            reader = easyocr.Reader(selected_codes,gpu=False,model_storage_directory=".EasyOCR/model/",download_enabled=False)
             # OCRを実行し、テキスト情報を抽出
             # result = reader.readtext(np.array(cropped_image), detail=1)
 
