@@ -33,6 +33,8 @@ if 'num_columns' not in st.session_state.keys():
     st.session_state['num_columns'] = def_num_columns
 if 'num_offset' not in st.session_state.keys():
     st.session_state['num_offset'] = def_num_offset
+if 'result' not in st.session_state.keys():
+    st.session_state['result'] = []
 
 # ページ幅の設定
 st.set_page_config(layout="wide")
@@ -60,7 +62,14 @@ if uploaded_image:
     st.session_state['num_offset'] = st.sidebar.number_input("オフセット値を入力", min_value=0, value=def_num_offset)
 
     #OCR実行ボタンの配置
-    button=st.sidebar.button("OCR実行")
+    def do_ocr():
+        # EasyOCR Readerのインスタンスを作成
+        # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
+        reader = easyocr.Reader(selected_codes,model_storage_directory=".EasyOCR/model/")
+        # OCRを実行し、テキスト情報を抽出
+        st.session_state['result'] = reader.readtext(np.array(cropped_image), detail=1)
+        
+    button=st.sidebar.button("OCR実行",on_click=do_ocr)
     
     # st_cropperで画像のトリミング
     st.write("OCR実行エリアの選択")
@@ -122,35 +131,28 @@ if uploaded_image:
 
 
     with right_col:
-        # OCR実行
-        if button:
-            # EasyOCR Readerのインスタンスを作成
-            # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
-            reader = easyocr.Reader(selected_codes,model_storage_directory=".EasyOCR/model/")
-            # OCRを実行し、テキスト情報を抽出
-            result = reader.readtext(np.array(cropped_image), detail=1)
-            
-            # OCRの結果からセル内容をリストに格納
-            data = []
-            for i in range(st.session_state['num_offset']):
-                data.append("---")
+        
+        # OCRの結果からセル内容をリストに格納
+        data = []
+        for i in range(st.session_state['num_offset']):
+            data.append("---")
 
-            for (bbox, text, prob) in result:
-                data.append(text)
-                       
-            # OCR結果を表形式に整理
-            table_data = [data[i:i + st.session_state['num_columns']] for i in range(0, len(data), st.session_state['num_columns'])]
-            df = pd.DataFrame(table_data)
+        for (bbox, text, prob) in st.session_state['result']:
+            data.append(text)
+                    
+        # OCR結果を表形式に整理
+        table_data = [data[i:i + st.session_state['num_columns']] for i in range(0, len(data), st.session_state['num_columns'])]
+        df = pd.DataFrame(table_data)
 
-            # 表を表示
-            st.write("OCR結果")
-            st.dataframe(df)
+        # 表を表示
+        st.write("OCR結果")
+        st.dataframe(df)
 
-            # CSVとしてダウンロード
-            csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="CSVとしてダウンロード",
-                data=csv,
-                file_name='table_data.csv',
-                mime='text/csv',
-            )
+        # CSVとしてダウンロード
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="CSVとしてダウンロード",
+            data=csv,
+            file_name='table_data.csv',
+            mime='text/csv',
+        )
