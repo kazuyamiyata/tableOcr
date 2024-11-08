@@ -14,7 +14,7 @@ def create_pos_data(contour):
 
 def display_np(img):
     check=Image.fromarray(img)
-    st.image(check, caption="チェック画像", use_column_width=True)
+    st.image(check, caption="チェック画像", use_container_width=True)
 
 # 言語選択のオプション
 language_options = ["日本語", "英語"]
@@ -99,7 +99,7 @@ if uploaded_image:
     # 左側：トリミングエリア
     with left_col:
         # トリミングされた画像を表示
-        st.image(cropped_image, caption="OCR実行エリア", use_column_width=True)
+        st.image(cropped_image, caption="OCR実行エリア", use_container_width=True)
 
 
     with right_col:
