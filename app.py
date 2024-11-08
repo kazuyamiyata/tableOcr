@@ -1,8 +1,6 @@
 import streamlit as st
 from streamlit_cropper import st_cropper
 from PIL import Image
-# import os
-# os.environ['EASYOCR_MODULE_PATH'] = '.EasyOCR/model'
 import easyocr
 import pandas as pd
 import numpy as np
@@ -109,7 +107,7 @@ if uploaded_image:
         if button:
             # EasyOCR Readerのインスタンスを作成
             # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
-            reader = easyocr.Reader(selected_codes)
+            reader = easyocr.Reader(selected_codes,model_storage_directory=".EasyOCR/model/",download_enabled=False)
             # OCRを実行し、テキスト情報を抽出
             result = reader.readtext(np.array(cropped_image), detail=1)
 
