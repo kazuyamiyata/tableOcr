@@ -93,42 +93,42 @@ if uploaded_image:
                 cv2.drawContours(export_img, contours, i, color, 3)
         display_np(export_img)
 
-    # 左右に分けるレイアウト作成
-    left_col, right_col = st.columns(2,vertical_alignment="center")
+    # # 左右に分けるレイアウト作成
+    # left_col, right_col = st.columns(2,vertical_alignment="center")
 
-    # 左側：トリミングエリア
-    with left_col:
-        # トリミングされた画像を表示
-        st.image(cropped_image, caption="OCR実行エリア")
+    # # 左側：トリミングエリア
+    # with left_col:
+    #     # トリミングされた画像を表示
+    #     st.image(cropped_image, caption="OCR実行エリア")
 
 
-    with right_col:
+    # with right_col:
         # OCR実行
-        if button:
+        # if button:
             # EasyOCR Readerのインスタンスを作成
             # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
-            reader = easyocr.Reader(selected_codes,gpu=False,model_storage_directory=".EasyOCR/model/",download_enabled=False)
+            # reader = easyocr.Reader(selected_codes,gpu=False,model_storage_directory=".EasyOCR/model/",download_enabled=False)
             # OCRを実行し、テキスト情報を抽出
-            result = reader.readtext(np.array(cropped_image), detail=1)
+            # result = reader.readtext(np.array(cropped_image), detail=1)
 
-            # OCRの結果からセル内容をリストに格納
-            data = []
-            for (bbox, text, prob) in result:
-                data.append(text)
+            # # OCRの結果からセル内容をリストに格納
+            # data = []
+            # for (bbox, text, prob) in result:
+            #     data.append(text)
 
-            # OCR結果を表形式に整理
-            table_data = [data[i:i + num_columns] for i in range(0, len(data), num_columns)]
-            df = pd.DataFrame(table_data)
+            # # OCR結果を表形式に整理
+            # table_data = [data[i:i + num_columns] for i in range(0, len(data), num_columns)]
+            # df = pd.DataFrame(table_data)
 
-            # 表を表示
-            st.write("OCR結果")
-            st.dataframe(df)
+            # # 表を表示
+            # st.write("OCR結果")
+            # st.dataframe(df)
 
-            # CSVとしてダウンロード
-            csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="CSVとしてダウンロード",
-                data=csv,
-                file_name='table_data.csv',
-                mime='text/csv',
-            )
+            # # CSVとしてダウンロード
+            # csv = df.to_csv(index=False).encode('utf-8')
+            # st.download_button(
+            #     label="CSVとしてダウンロード",
+            #     data=csv,
+            #     file_name='table_data.csv',
+            #     mime='text/csv',
+            # )
