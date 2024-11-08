@@ -109,7 +109,7 @@ if uploaded_image:
             # reader = easyocr.Reader(['ja', 'en'])  # 日本語と英語対応
             reader = easyocr.Reader(selected_codes,gpu=False,model_storage_directory=".EasyOCR/model/",download_enabled=False)
             # OCRを実行し、テキスト情報を抽出
-            # result = reader.readtext(np.array(cropped_image), detail=1)
+            result = reader.readtext(np.array(cropped_image), detail=1)
 
             # # OCRの結果からセル内容をリストに格納
             # data = []
