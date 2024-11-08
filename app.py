@@ -24,6 +24,10 @@ language_code_map = {
     "英語": "en"
 }
 
+# 画像の最大幅と高さを設定
+max_width, max_height = 800, 800  # 必要に応じて変更
+
+
 # ページ幅の設定
 st.set_page_config(layout="wide")
 
@@ -47,6 +51,14 @@ selected_codes = [language_code_map[lang] for lang in selected_languages]
 if uploaded_image:
     # 画像の読み込み
     image = Image.open(uploaded_image)
+    
+    # 画像の幅と高さを取得
+    image_width, image_height = image.size
+    
+    # 画像が最大幅または高さを超える場合はリサイズ
+    if image_width > max_width or image_height > max_height:
+        # アスペクト比を保持しつつリサイズ
+        image.thumbnail((max_width, max_height), Image.ANTIALIAS)
 
     #OCR実行ボタンの配置
     button=st.sidebar.button("OCR実行")
