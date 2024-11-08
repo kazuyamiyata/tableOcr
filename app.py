@@ -52,20 +52,20 @@ if uploaded_image:
     # 画像の読み込み
     image = Image.open(uploaded_image)
     
-    # 画像の幅と高さを取得
-    image_width, image_height = image.size
-    
-    # 画像が最大幅または高さを超える場合はリサイズ
-    if image_width > max_width or image_height > max_height:
-        # アスペクト比を保持しつつリサイズ
-        image.thumbnail((max_width, max_height), Image.ANTIALIAS)
-
     #OCR実行ボタンの配置
     button=st.sidebar.button("OCR実行")
     
     # st_cropperで画像のトリミング
     st.write("OCR実行エリアの選択")
     cropped_image = st_cropper(image, realtime_update=True, box_color='blue', aspect_ratio=None)
+
+    # 画像の幅と高さを取得
+    image_width, image_height = cropped_image.size
+    
+    # 画像が最大幅または高さを超える場合はリサイズ
+    if image_width > max_width or image_height > max_height:
+        # アスペクト比を保持しつつリサイズ
+        cropped_image.thumbnail((max_width, max_height), Image.ANTIALIAS)
 
     with st.sidebar.expander("検討中の機能"):
         edge_threshold = st.slider("エッジ検出のための閾値",-500,500,100,5)
