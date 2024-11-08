@@ -14,7 +14,7 @@ def create_pos_data(contour):
 
 def display_np(img):
     check=Image.fromarray(img)
-    st.image(check, caption="チェック画像", use_container_width=True)
+    st.image(check, caption="チェック画像")
 
 # 言語選択のオプション
 language_options = ["日本語", "英語"]
@@ -99,7 +99,7 @@ if uploaded_image:
     # 左側：トリミングエリア
     with left_col:
         # トリミングされた画像を表示
-        st.image(cropped_image, caption="OCR実行エリア", use_container_width=True)
+        st.image(cropped_image, caption="OCR実行エリア")
 
 
     with right_col:
@@ -122,7 +122,7 @@ if uploaded_image:
 
             # 表を表示
             st.write("OCR結果")
-            st.dataframe(df,use_container_width=True)
+            st.dataframe(df)
 
             # CSVとしてダウンロード
             csv = df.to_csv(index=False).encode('utf-8')
