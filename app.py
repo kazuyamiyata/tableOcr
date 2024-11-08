@@ -146,7 +146,7 @@ if uploaded_image:
 
         # 表を表示
         st.write("OCR結果")
-        st.dataframe(df)
+        st.dataframe(df,use_container_width=True)
 
         # CSVとしてダウンロード
         csv = df.to_csv(index=False).encode('utf-8')
