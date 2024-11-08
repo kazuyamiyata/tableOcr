@@ -94,7 +94,7 @@ if uploaded_image:
         display_np(export_img)
 
     # # 左右に分けるレイアウト作成
-    # left_col, right_col = st.columns(2,vertical_alignment="center")
+    left_col, right_col = st.columns(2,vertical_alignment="center")
 
     # 左側：トリミングエリア
     with left_col:
